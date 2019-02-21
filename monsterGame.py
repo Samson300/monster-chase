@@ -4,6 +4,9 @@ import time
 import sys
 import math
 
+pygame.init()
+pygame.mixer.init()
+sounda= pygame.mixer.Sound("sounds/win.wav")
 def main():
     width = 510
     height = 480
@@ -62,6 +65,7 @@ def main():
             self.locationx = 400
             self.locationy = 400
             self.counter = 0
+            self.dead = False
         def location_jump(self):
             if self.locationx == width:
                 self.locationx = 0
@@ -125,8 +129,13 @@ def main():
         distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
         print(distance)
         if distance < 32:
-            stop_game = True
+            # stop_game = True
+            monster.dead = True
+            sounda.play()
             print("You win!")
+
+            
+            
 
         # Draw background
 
@@ -135,7 +144,13 @@ def main():
         # Game display
         screen.blit(background_image, (0, 0))
         screen.blit(hero.image, (hero.locationx, hero.locationy))
-        screen.blit(monster.image, (monster.locationx, monster.locationy))
+        
+        if monster.dead == False:
+            screen.blit(monster.image, (monster.locationx, monster.locationy))
+
+        elif monster.dead == True:
+            pass
+        
 
         
 
