@@ -1,7 +1,7 @@
 import pygame
 import random
 import time
-
+import sys
 
 def main():
     width = 510
@@ -15,8 +15,30 @@ def main():
 
     # Game initialization
     background_image = pygame.image.load('images/background.png').convert_alpha()
-    hero_image = pygame.image.load('images/hero.png').convert_alpha()
+    # hero_image = pygame.image.load('images/hero.png').convert_alpha()
     
+
+    
+    class Hero():
+        def __init__(self):
+            self.image = pygame.image.load('images/hero.png').convert_alpha()
+            self.locationx = 240
+            self.locationy = 240
+            self.counter = 0
+        def location_change(self):
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.locationx -= 5
+                if event.key == pygame.K_RIGHT:
+                    self.locationx += 5
+                if event.key == pygame.K_UP:
+                    self.locationy -= 5
+                if event.key == pygame.K_DOWN:
+                    self.locationy += 5
+                
+
+
+
     
     class Monster():
         def __init__(self):
@@ -67,7 +89,7 @@ def main():
             else:
                 self.counter = 0
     monster = Monster()
-    
+    hero = Hero()
 
     stop_game = False
     while not stop_game:
@@ -82,6 +104,7 @@ def main():
         # Game logic
         monster.location_jump()
         monster.location_change()
+        hero.location_change()
 
 
         # Draw background
@@ -90,7 +113,7 @@ def main():
 
         # Game display
         screen.blit(background_image, (0, 0))
-        screen.blit(hero_image, (240, 240))
+        screen.blit(hero.image, (hero.locationx, hero.locationy))
         screen.blit(monster.image, (monster.locationx, monster.locationy))
 
         
