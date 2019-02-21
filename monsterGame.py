@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 import sys
+import math
 
 def main():
     width = 510
@@ -15,32 +16,47 @@ def main():
 
     # Game initialization
     background_image = pygame.image.load('images/background.png').convert_alpha()
-    # hero_image = pygame.image.load('images/hero.png').convert_alpha()
-    
 
-    
-    class Hero():
+
+    class Character():
+        def __init__(self):
+            self.counter = 0
+
+
+    class Hero(Character):
         def __init__(self):
             self.image = pygame.image.load('images/hero.png').convert_alpha()
             self.locationx = 240
             self.locationy = 240
             self.counter = 0
         def location_change(self):
+            if self.locationx >= width - 60:
+                self.locationx -= 3
+            elif self.locationx < 35:
+                self.locationx += 3
+            elif self.locationy < 35:
+                self.locationy += 3
+            elif self.locationy >= height -65:
+                self.locationy -= 3 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.locationx -= 5
+                    self.locationx -= 3
                 if event.key == pygame.K_RIGHT:
-                    self.locationx += 5
+                    self.locationx += 3
                 if event.key == pygame.K_UP:
-                    self.locationy -= 5
+                    self.locationy -= 3
                 if event.key == pygame.K_DOWN:
-                    self.locationy += 5
+                    self.locationy += 3
+                
+        # def map_border(self):
+            # if self.locationx == width:
+            #     self.locationx =
                 
 
 
 
     
-    class Monster():
+    class Monster(Character):
         def __init__(self):
             self.image = pygame.image.load('images/monster.png').convert_alpha()
             self.locationx = 400
@@ -57,7 +73,6 @@ def main():
                 self.locationy = height
         
         def location_change(self):
-        
             if self.counter <= 100:
                 self.locationx += 5
                 self.counter += 1
@@ -88,6 +103,7 @@ def main():
                 self.counter += 1
             else:
                 self.counter = 0
+    
     monster = Monster()
     hero = Hero()
 
@@ -100,12 +116,17 @@ def main():
             if event.type == pygame.QUIT:
                 stop_game = True
 
-
         # Game logic
         monster.location_jump()
         monster.location_change()
         hero.location_change()
 
+        # Calculates if hero caught monster
+        distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
+        print(distance)
+        if distance < 32:
+            stop_game = True
+            print("You win!")
 
         # Draw background
 
