@@ -6,9 +6,11 @@ import math
 
 pygame.init()
 pygame.mixer.init()
+# Sounds
 sounda = pygame.mixer.Sound("sounds/win.wav")
 soundb = pygame.mixer.Sound("sounds/lose.wav")
 soundc = pygame.mixer.Sound("sounds/music.wav")
+
 def main():
     width = 510
     height = 480
@@ -21,8 +23,7 @@ def main():
 
     # Game initialization
     background_image = pygame.image.load('images/background.png').convert_alpha()
-
-
+ 
     class Character():
         def __init__(self):
             self.counter = 0
@@ -55,14 +56,7 @@ def main():
                 if event.key == pygame.K_DOWN:
                     self.locationy += 3
                 
-        # def map_border(self):
-            # if self.locationx == width:
-            #     self.locationx =
                 
-
-
-
-    
     class Monster(Character):
         def __init__(self):
             self.image = pygame.image.load('images/monster.png').convert_alpha()
@@ -79,6 +73,7 @@ def main():
                 self.locationy = 0
             elif self.locationy == 0:
                 self.locationy = height
+        
         
         def location_change(self):
             if self.counter <= 100:
@@ -112,6 +107,7 @@ def main():
             else:
                 self.counter = 0
     
+
     class Goblin():
         def __init__(self):
             self.image = pygame.image.load('images/goblin.png').convert_alpha()
@@ -151,18 +147,19 @@ def main():
             else:
                 self.counter = 0
 
+
     goblin1 = Goblin()
     goblin2 = Goblin()
     goblin = Goblin()
     monster = Monster()
     hero = Hero()
 
+
     stop_game = False
     while not stop_game:
         for event in pygame.event.get():
 
             # Event handling
-
             if event.type == pygame.QUIT:
                 stop_game = True
 
@@ -176,12 +173,38 @@ def main():
 
         # Calculates if hero caught monster(collision occur)
         distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
-        print(distance)
+
+
+        # grape = True
+        # if grape == True:
+        screen.blit(background_image, (0, 0))
+            
+        black = (0,0,0)
+        font = pygame.font.SysFont(None, 50)
+        white = (255, 255, 255)
+        def message_to_screen(msg, color):            
+            screen_text = font.render(msg, True, color)
+            rect = screen_text.get_rect()
+            # rect_3 = screen_text.get_rect()
+            screen.fill(blue_color)
+            screen.blit(screen_text, rect)
+            print("Looooooooooooooooooook at me")
+            pygame.display.update()
+            print("hello")
+            
         if distance < 32:
             # stop_game = True
             monster.dead = True
             sounda.play()
             print("You win!")
+            # grape = False
+        if monster.dead:
+            message_to_screen("You win! Hit Enter to play again.", white)
+            
+
+            
+
+
             # pygame.display.set_caption("Testing 1 2 3")
         
         # Calculates if collition between goblin and hero occur
@@ -190,24 +213,34 @@ def main():
             soundb.play()
             hero.dead = True
             print("You lose")
+        if hero.dead:
+            message_to_screen("You Lose! Hit Enter to play again.", white)
         distance3 = math.sqrt(math.pow(goblin1.locationx - hero.locationx,2) + math.pow(goblin1.locationy - hero.locationy,2))
         if distance3 < 32:
             soundb.play()
             hero.dead = True
             print("You lose")
+        if hero.dead:    
+            message_to_screen("You Lose! Hit Enter to play again.", white)
         distance4 = math.sqrt(math.pow(goblin2.locationx - hero.locationx,2) + math.pow(goblin2.locationy - hero.locationy,2))
         if distance4 < 32:
             soundb.play()
             hero.dead = True
             print("You lose")
+        if hero.dead:
+            message_to_screen("You Lose! Hit Enter to play again.", white)
 
+
+        if hero.dead or monster.dead:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    print("helloooooooooooooo")
+                    monster.dead = False
+                    hero.dead = False
         # Plays background music
         soundc.play()
 
-        # screen.fill(blue_color)
         # Game display
-        screen.blit(background_image, (0, 0))
-        
         screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
         screen.blit(goblin1.image, (goblin1.locationx, goblin1.locationy))
         screen.blit(goblin2.image, (goblin2.locationx, goblin2.locationy))
@@ -227,7 +260,7 @@ def main():
         elif hero.dead == True:
             pass
             # text box "YOU LOSE!! PRESS ENTER TO RESTART"
-
+        pygame.display.flip()
 
         pygame.display.update()
         clock.tick(60)
