@@ -1,12 +1,14 @@
 import pygame
-import random
+from random import randint
 import time
 import sys
 import math
 
 pygame.init()
 pygame.mixer.init()
-sounda= pygame.mixer.Sound("sounds/win.wav")
+sounda = pygame.mixer.Sound("sounds/win.wav")
+soundb = pygame.mixer.Sound("sounds/lose.wav")
+soundc = pygame.mixer.Sound("sounds/music.wav")
 def main():
     width = 510
     height = 480
@@ -24,6 +26,7 @@ def main():
     class Character():
         def __init__(self):
             self.counter = 0
+            self.dead = False
 
 
     class Hero(Character):
@@ -32,6 +35,7 @@ def main():
             self.locationx = 240
             self.locationy = 240
             self.counter = 0
+            self.dead = False
         def location_change(self):
             if self.locationx >= width - 60:
                 self.locationx -= 3
@@ -64,7 +68,7 @@ def main():
             self.image = pygame.image.load('images/monster.png').convert_alpha()
             self.locationx = 400
             self.locationy = 400
-            self.counter = 0
+            self.counter = randint(0, 400)
             self.dead = False
         def location_jump(self):
             if self.locationx == width:
@@ -108,6 +112,48 @@ def main():
             else:
                 self.counter = 0
     
+    class Goblin():
+        def __init__(self):
+            self.image = pygame.image.load('images/goblin.png').convert_alpha()
+            self.counter = randint(0, 800)
+            self.locationx = randint(0, 400)
+            self.locationy = randint(0, 400)
+        
+        def location_change(self):
+            if self.counter <= 100:
+                self.locationx += 5
+                self.counter += 1
+            elif self.counter <= 200:
+                self.locationx -= 5
+                self.counter += 1
+            elif self.counter <= 300:
+                self.locationy += 5
+                self.counter += 1
+            elif self.counter <= 400:
+                self.locationy -= 5
+                self.counter += 1
+            elif self.counter <= 500:
+                self.locationy += 5
+                self.locationx += 5
+                self.counter += 1
+            elif self.counter <= 600:
+                self.locationy -= 5
+                self.locationx -= 5
+                self.counter += 1
+            elif self.counter <= 700:
+                self.locationy += 5
+                self.locationx -= 5
+                self.counter += 1
+            elif self.counter <= 800:
+                self.locationy -= 5
+                self.locationx += 5
+                self.counter += 1
+            else:
+                self.counter = 0
+
+    goblin1 = Goblin()
+    goblin2 = Goblin()
+    goblin = Goblin()
     monster = Monster()
     hero = Hero()
 
@@ -124,8 +170,11 @@ def main():
         monster.location_jump()
         monster.location_change()
         hero.location_change()
+        goblin.location_change()
+        goblin1.location_change()
+        goblin2.location_change()
 
-        # Calculates if hero caught monster
+        # Calculates if hero caught monster(collision occur)
         distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
         print(distance)
         if distance < 32:
@@ -133,26 +182,51 @@ def main():
             monster.dead = True
             sounda.play()
             print("You win!")
+            # pygame.display.set_caption("Testing 1 2 3")
+        
+        # Calculates if collition between goblin and hero occur
+        distance2 = math.sqrt(math.pow(goblin.locationx - hero.locationx,2) + math.pow(goblin.locationy - hero.locationy,2))
+        if distance2 < 32:
+            soundb.play()
+            hero.dead = True
+            print("You lose")
+        distance3 = math.sqrt(math.pow(goblin1.locationx - hero.locationx,2) + math.pow(goblin1.locationy - hero.locationy,2))
+        if distance3 < 32:
+            soundb.play()
+            hero.dead = True
+            print("You lose")
+        distance4 = math.sqrt(math.pow(goblin2.locationx - hero.locationx,2) + math.pow(goblin2.locationy - hero.locationy,2))
+        if distance4 < 32:
+            soundb.play()
+            hero.dead = True
+            print("You lose")
 
-            
-            
-
-        # Draw background
+        # Plays background music
+        soundc.play()
 
         # screen.fill(blue_color)
-
         # Game display
         screen.blit(background_image, (0, 0))
-        screen.blit(hero.image, (hero.locationx, hero.locationy))
         
+        screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
+        screen.blit(goblin1.image, (goblin1.locationx, goblin1.locationy))
+        screen.blit(goblin2.image, (goblin2.locationx, goblin2.locationy))
+
+        # Print monster untill he dies
         if monster.dead == False:
             screen.blit(monster.image, (monster.locationx, monster.locationy))
 
         elif monster.dead == True:
             pass
-        
+            # text box "YOU WIN!! PRESS ENTER TO RESTART"
 
-        
+        # prints Hero untill he dies
+        if hero.dead == False:
+            screen.blit(hero.image, (hero.locationx, hero.locationy))
+
+        elif hero.dead == True:
+            pass
+            # text box "YOU LOSE!! PRESS ENTER TO RESTART"
 
 
         pygame.display.update()
