@@ -28,6 +28,7 @@ def main():
         def __init__(self):
             self.counter = 0
             self.dead = False
+            self.image = img
 
 
     class Hero(Character):
@@ -37,6 +38,7 @@ def main():
             self.locationy = 240
             self.counter = 0
             self.dead = False
+
         def location_change(self):
             if self.locationx >= width - 60:
                 self.locationx -= 3
@@ -64,6 +66,7 @@ def main():
             self.locationy = 400
             self.counter = randint(0, 400)
             self.dead = False
+        
         def location_jump(self):
             if self.locationx == width:
                 self.locationx = 0
@@ -72,8 +75,7 @@ def main():
             elif self.locationy == height:
                 self.locationy = 0
             elif self.locationy == 0:
-                self.locationy = height
-        
+                self.locationy = height        
         
         def location_change(self):
             if self.counter <= 100:
@@ -163,25 +165,23 @@ def main():
             if event.type == pygame.QUIT:
                 stop_game = True
 
-        # Game logic
+        # Allows movement of characters
         monster.location_jump()
         monster.location_change()
         hero.location_change()
         goblin.location_change()
         goblin1.location_change()
         goblin2.location_change()
+        
 
-        # Calculates if hero caught monster(collision occur)
-        distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
-
-
-        # grape = True
-        # if grape == True:
+        # Displays background image
         screen.blit(background_image, (0, 0))
             
-        black = (0,0,0)
+
         font = pygame.font.SysFont(None, 50)
         white = (255, 255, 255)
+        
+        
         def message_to_screen(msg, color):            
             screen_text = font.render(msg, True, color)
             rect = screen_text.get_rect()
@@ -191,7 +191,10 @@ def main():
             print("Looooooooooooooooooook at me")
             pygame.display.update()
             print("hello")
-            
+
+        
+        # Calculates if hero caught monster(collision occur)
+        distance = math.sqrt(math.pow(monster.locationx - hero.locationx,2) + math.pow(monster.locationy - hero.locationy,2))
         if distance < 32:
             # stop_game = True
             monster.dead = True
@@ -201,11 +204,6 @@ def main():
         if monster.dead:
             message_to_screen("You win! Hit Enter to play again.", white)
             
-
-            
-
-
-            # pygame.display.set_caption("Testing 1 2 3")
         
         # Calculates if collition between goblin and hero occur
         distance2 = math.sqrt(math.pow(goblin.locationx - hero.locationx,2) + math.pow(goblin.locationy - hero.locationy,2))
@@ -230,7 +228,7 @@ def main():
         if hero.dead:
             message_to_screen("You Lose! Hit Enter to play again.", white)
 
-
+        # Allows you to hit Enter key to reset monster or hero on screen
         if hero.dead or monster.dead:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -240,7 +238,7 @@ def main():
         # Plays background music
         soundc.play()
 
-        # Game display
+        # Game display goblins
         screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
         screen.blit(goblin1.image, (goblin1.locationx, goblin1.locationy))
         screen.blit(goblin2.image, (goblin2.locationx, goblin2.locationy))
@@ -250,17 +248,17 @@ def main():
             screen.blit(monster.image, (monster.locationx, monster.locationy))
 
         elif monster.dead == True:
-            pass
+            soundb.play()
             # text box "YOU WIN!! PRESS ENTER TO RESTART"
 
-        # prints Hero untill he dies
+        # Prints Hero untill he dies
         if hero.dead == False:
             screen.blit(hero.image, (hero.locationx, hero.locationy))
 
         elif hero.dead == True:
-            pass
+            sounda.play()
             # text box "YOU LOSE!! PRESS ENTER TO RESTART"
-        pygame.display.flip()
+        # pygame.display.flip()?
 
         pygame.display.update()
         clock.tick(60)
