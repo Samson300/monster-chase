@@ -7,9 +7,9 @@ import math
 pygame.init()
 pygame.mixer.init()
 # Sounds
-sounda = pygame.mixer.Sound("sounds/win.wav")
-soundb = pygame.mixer.Sound("sounds/lose.wav")
-soundc = pygame.mixer.Sound("sounds/music.wav")
+soundWin = pygame.mixer.Sound("sounds/win.wav")
+soundLose = pygame.mixer.Sound("sounds/lose.wav")
+soundMusic = pygame.mixer.Sound("sounds/music.wav")
 
 def main():
     width = 510
@@ -232,7 +232,7 @@ def main():
         if distance < 32:
             # stop_game = True
             monster.dead = True
-            sounda.play()
+            soundWin.play()
             print("You win!")
             # grape = False
         if monster.dead:
@@ -242,21 +242,21 @@ def main():
         # Calculates if collition between goblin and hero occur
         distance2 = math.sqrt(math.pow(goblin.locationx - hero.locationx,2) + math.pow(goblin.locationy - hero.locationy,2))
         if distance2 < 32:
-            soundb.play()
+            soundLose.play()
             hero.dead = True
             print("You lose")
         if hero.dead:
             message_to_screen("You Lose! Hit Enter to play again.", white)
         distance3 = math.sqrt(math.pow(goblin1.locationx - hero.locationx,2) + math.pow(goblin1.locationy - hero.locationy,2))
         if distance3 < 32:
-            soundb.play()
+            soundLose.play()
             hero.dead = True
             print("You lose")
         if hero.dead:    
             message_to_screen("You Lose! Hit Enter to play again.", white)
         distance4 = math.sqrt(math.pow(goblin2.locationx - hero.locationx,2) + math.pow(goblin2.locationy - hero.locationy,2))
         if distance4 < 32:
-            soundb.play()
+            soundLose.play()
             hero.dead = True
             print("You lose")
         if hero.dead:
@@ -270,7 +270,7 @@ def main():
                     monster.dead = False
                     hero.dead = False
         # Plays background music
-        soundc.play()
+        # soundc.play()
 
         # Game display goblins
         screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
@@ -282,7 +282,7 @@ def main():
             screen.blit(monster.image, (monster.locationx, monster.locationy))
 
         elif monster.dead == True:
-            soundb.play()
+            soundWin.play()
             # text box "YOU WIN!! PRESS ENTER TO RESTART"
 
         # Prints Hero untill he dies
@@ -290,7 +290,7 @@ def main():
             screen.blit(hero.image, (hero.locationx, hero.locationy))
 
         elif hero.dead == True:
-            sounda.play()
+            soundLose.play()
             # text box "YOU LOSE!! PRESS ENTER TO RESTART"
         # pygame.display.flip()?
 
