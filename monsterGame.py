@@ -34,29 +34,62 @@ def main():
     class Hero(Character):
         def __init__(self):
             self.image = pygame.image.load('images/hero.png').convert_alpha()
+            self.moveX = 0
+            self.moveY = 0
             self.locationx = 240
             self.locationy = 240
             self.counter = 0
             self.dead = False
+            self.movementSpeed = 6
 
-        def location_change(self):
-            if self.locationx >= width - 60:
-                self.locationx -= 3
-            elif self.locationx < 35:
-                self.locationx += 3
-            elif self.locationy < 35:
-                self.locationy += 3
-            elif self.locationy >= height -65:
-                self.locationy -= 3 
+        def moveChange(self):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.locationx -= 3
+                    self.moveX = 1
+                    print("Left down")
                 if event.key == pygame.K_RIGHT:
-                    self.locationx += 3
+                    self.moveX = 2
+                    print("right down")
                 if event.key == pygame.K_UP:
-                    self.locationy -= 3
+                    self.moveY = 3
+                    print("up down")
                 if event.key == pygame.K_DOWN:
-                    self.locationy += 3
+                    self.moveY = 4
+                    print("down down")
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    self.moveX = 0
+                    print("Left up")
+                if event.key == pygame.K_RIGHT:
+                    self.moveX = 0
+                    print("right up")
+                if event.key == pygame.K_UP:
+                    self.moveY = 0
+                    print("up up")
+                if event.key == pygame.K_DOWN:
+                    self.moveY = 0
+                    print("down up")
+                
+            
+
+        def location_change(self):
+            if self.moveX == 1:
+                self.locationx -= self.movementSpeed
+            if self.moveX == 2:
+                self.locationx += self.movementSpeed
+            if self.moveY == 3:
+                self.locationy -= self.movementSpeed
+            if self.moveY == 4:
+                self.locationy += self.movementSpeed
+
+            if self.locationx >= width - 60:
+                self.locationx -= self.movementSpeed
+            elif self.locationx < 35:
+                self.locationx += self.movementSpeed
+            elif self.locationy < 35:
+                self.locationy += self.movementSpeed
+            elif self.locationy >= height -65:
+                self.locationy -= self.movementSpeed 
                 
                 
     class Monster(Character):
@@ -166,9 +199,10 @@ def main():
                 stop_game = True
 
         # Allows movement of characters
+        hero.moveChange()
+        hero.location_change()
         monster.location_jump()
         monster.location_change()
-        hero.location_change()
         goblin.location_change()
         goblin1.location_change()
         goblin2.location_change()
