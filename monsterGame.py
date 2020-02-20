@@ -14,7 +14,7 @@ soundMusic = pygame.mixer.Sound("sounds/music.wav")
 def main():
     width = 510
     height = 480
-    blue_color = (97, 159, 182)
+    black_color = (0, 0, 0)
 
     pygame.init()
     screen = pygame.display.set_mode((width, height))
@@ -220,7 +220,7 @@ def main():
             screen_text = font.render(msg, True, color)
             rect = screen_text.get_rect()
             # rect_3 = screen_text.get_rect()
-            screen.fill(blue_color)
+            screen.fill(black_color)
             screen.blit(screen_text, rect)
             print("Looooooooooooooooooook at me")
             pygame.display.update()
@@ -270,7 +270,8 @@ def main():
                     monster.dead = False
                     hero.dead = False
         # Plays background music
-        # soundc.play()
+        # if monster.dead == False and hero.dead == False:
+            # soundMusic.play()
 
         # Game display goblins
         screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
