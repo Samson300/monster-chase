@@ -23,7 +23,7 @@ def main():
 
     # Game initialization
     background_image = pygame.image.load('images/background.png').convert_alpha()
- 
+
     class Character():
         def __init__(self):
             self.counter = 0
@@ -34,29 +34,63 @@ def main():
     class Hero(Character):
         def __init__(self):
             self.image = pygame.image.load('images/hero.png').convert_alpha()
+            self.moveX = 0
+            self.moveY = 0
             self.locationx = 240
             self.locationy = 240
             self.counter = 0
             self.dead = False
+            self.movementSpeed = 6
 
-        def location_change(self):
-            if self.locationx >= width - 60:
-                self.locationx -= 3
-            elif self.locationx < 35:
-                self.locationx += 3
-            elif self.locationy < 35:
-                self.locationy += 3
-            elif self.locationy >= height -65:
-                self.locationy -= 3 
+        def moveChange(self):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.locationx -= 3
+                    self.moveX = 1
+                    print("Left down")
                 if event.key == pygame.K_RIGHT:
-                    self.locationx += 3
+                    self.moveX = 2
+                    print("right down")
                 if event.key == pygame.K_UP:
-                    self.locationy -= 3
+                    self.moveY = 3
+                    print("up down")
                 if event.key == pygame.K_DOWN:
-                    self.locationy += 3
+                    self.moveY = 4
+                    print("down down")
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    self.moveX = 0
+                    print("Left up")
+                if event.key == pygame.K_RIGHT:
+                    self.moveX = 0
+                    print("right up")
+                if event.key == pygame.K_UP:
+                    self.moveY = 0
+                    print("up up")
+                if event.key == pygame.K_DOWN:
+                    self.moveY = 0
+                    print("down up")
+                
+            
+
+        def location_change(self):
+            if self.moveX == 1:
+                self.locationx -= self.movementSpeed
+            if self.moveX == 2:
+                self.locationx += self.movementSpeed
+            if self.moveY == 3:
+                self.locationy -= self.movementSpeed
+            if self.moveY == 4:
+                self.locationy += self.movementSpeed
+
+            if self.locationx >= width - 60:
+                self.locationx -= self.movementSpeed
+            elif self.locationx < 35:
+                self.locationx += self.movementSpeed
+            elif self.locationy < 35:
+                self.locationy += self.movementSpeed
+            elif self.locationy >= height -65:
+                self.locationy -= self.movementSpeed 
+                
                 
                 
     class Monster(Character):
@@ -166,9 +200,10 @@ def main():
                 stop_game = True
 
         # Allows movement of characters
+        hero.moveChange()
+        hero.location_change()
         monster.location_jump()
         monster.location_change()
-        hero.location_change()
         goblin.location_change()
         goblin1.location_change()
         goblin2.location_change()
@@ -236,7 +271,8 @@ def main():
                     monster.dead = False
                     hero.dead = False
         # Plays background music
-        soundc.play()
+        # if hero.dead == False and monster.dead == False:
+        #     soundc.play()
 
         # Game display goblins
         screen.blit(goblin.image, (goblin.locationx, goblin.locationy))
@@ -248,7 +284,7 @@ def main():
             screen.blit(monster.image, (monster.locationx, monster.locationy))
 
         elif monster.dead == True:
-            soundb.play()
+            sounda.play()
             # text box "YOU WIN!! PRESS ENTER TO RESTART"
 
         # Prints Hero untill he dies
@@ -256,12 +292,12 @@ def main():
             screen.blit(hero.image, (hero.locationx, hero.locationy))
 
         elif hero.dead == True:
-            sounda.play()
+            soundb.play()
             # text box "YOU LOSE!! PRESS ENTER TO RESTART"
         # pygame.display.flip()?
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
     pygame.quit()
 
